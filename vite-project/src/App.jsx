@@ -1,33 +1,34 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import { useEffect, useState } from 'react'
+import { Helmet } from "react-helmet"
+
 import './App.css'
 
 function App() {
   const [count, setCount] = useState(0)
+  const [post, setPost] = useState({})
+
+  useEffect(() => {
+    async function fetchData(){
+      const postRes = await (await fetch("https://jsonplaceholder.typicode.com/posts/1")).json()
+      setPost(postRes)
+    }
+    fetchData()
+    console.log(post)
+  },[])
 
   return (
     <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+    <Helmet>
+    <meta name='description' content={post.body} />
+{ /* End standard metadata tags */ }
+{ /* Facebook tags */ }
+<meta property="og:type" content={"Some type"} />
+<meta property="og:title" content={post.title} />
+<meta property="og:description" content={post.body} />
+    </Helmet>
+      {
+        post.body ? post.body : "Loading..."
+      }
     </>
   )
 }
